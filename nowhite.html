@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>No White</title>
+    <style>
+      * {
+        margin: 0px;
+        padding: 0px;
+        list-style: none;
+      }
+      .wrap {
+        width: 320px;
+        height: 510px;
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px solid black;
+      }
+      .score {
+        height: 30px;
+        width: 160px;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 50px;
+        line-height: 30px;
+      }
+      .score span {
+        border: 1px solid black;
+      }
+      .content {
+        position: relative;
+        width: 320px;
+        height: 480px;
+        border: 1px solid pink;
+        overflow: hidden;
+      }
+      .face {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+      }
+      .two {
+        top: -480px;
+      }
+      .btn {
+        flex-grow: 1;
+        display: flex;
+      }
+      .btn li {
+        flex-grow: 1;
+        border: 1px solid #999;
+      }
+      .black {
+        background-color: black;
+      }
+      .pink {
+        background-color: pink;
+      }
+      .red {
+        background-color: red;
+      }
+    </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="score">您的得分是<span>0</span></div>
+    <div class="content">
+      <div class="face one">
+        <ul class="btn">
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
+        <ul class="btn">
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
+        <ul class="btn">
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
+        <ul class="btn">
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
+      </div>
+      <div class="face two">
+        <ul class="btn">
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
+        <ul class="btn">
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
+        <ul class="btn">
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
+        <ul class="btn">
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <script>
+    var face1 = document.getElementsByClassName('one')[0];
+    var face2 = document.getElementsByClassName('two')[0];
+    var btnCo = document.getElementsByClassName('btn');
+    var content = document.getElementsByClassName('content')[0];
+    var score = document.getElementsByTagName('span')[0];
+    var speed = 1;
+    random(0);
+    random(4);
+    var timer =setInterval(move,20);
+    function move() {
+      let top1 = face1.offsetTop;
+      let top2 = face2.offsetTop;
+      face1.style.top = top1 + speed + 'px';
+      face2.style.top = top2 + speed + 'px';
+      for (let i = 1; i < 5; i++) {
+        if(top1 / 120 >= i && top1 / 120 < i + 1) {
+          for(let m = 0; m < 4; m ++) {
+            if(btnCo[4 - i].getElementsByTagName('li')[m].className === 'black') {
+              clearInterval(timer);
+              alert('你输了a');
+            }
+          }
+        }
+      }
+      for (let i = 1; i < 5; i++) {
+        if(top2 / 120 >= i && top2 / 120 < i + 1) {
+          for(let m = 0; m < 4; m ++) {
+            if(btnCo[8 - i].getElementsByTagName('li')[m].className === 'black') {
+              clearInterval(timer);
+              alert('你输了b');
+            }
+          }
+        }
+      }
+      if(top1 >= 480) {
+        face1.style.top = -480 + speed * 2 + 'px';
+        random(0);
+        speed ++;
+      }
+      if(top2 >= 480) {
+        face2.style.top = -480 + speed * 2 + 'px';
+        random(4);
+        speed ++;
+      }
+    }
+    function random(j) {
+      for(let i = j; i < j + 4; i++) {
+        let x = Math.floor(Math.random() * 4);
+        for(let a = 0; a < 4; a++) {
+          btnCo[i].getElementsByTagName('li')[a % 4].className = '';
+        }
+        btnCo[i].getElementsByTagName('li')[x].className = 'black';
+      }
+    }
+    content.addEventListener('click', function(e) {
+      if(e.target.className === 'black') {
+        e.target.className = 'pink';
+        score.innerText = Number(score.innerText) + 20;
+      }else {
+        clearInterval(timer);
+        // e.target.className ="red";
+        // console.log(e.target)
+        alert('你输了' + e.target);
+      }
+    }, false)
+  </script>
+</body>
+</html>

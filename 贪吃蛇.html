@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>贪吃蛇</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+		}
+		.map {
+			height: 400px;
+			width: 400px;
+			border: 2px solid black;
+			position: relative;
+			margin: auto;
+		}
+		#head {
+			height: 10px;
+			width: 10px;
+			background-color: green;
+			position: absolute;
+			top: 200px;
+			left: 200px;
+		}
+		#body {
+			height: 10px;
+			width: 10px;
+			background-color: green;
+			position: absolute;
+			top: 210px;
+			left: 200px;
+		}
+		#tail {
+			height: 10px;
+			width: 10px;
+			background-color: green;
+			position: absolute;
+			top: 220px;
+			left: 200px;
+		}
+		.start {
+			position: relative;
+			left: 40%;
+			width: 50px;
+			height: 50px;
+		}
+		.pause {
+			position: relative;
+			left: 52%;
+			width: 50px;
+			height: 50px;
+		}
+		.food {
+			height: 10px;
+			width: 10px;
+			background-color: green;
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+		.snake {
+			height: 10px;
+			width: 10px;
+			background-color: green;
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+
+	</style>
+</head>
+<body>
+	<div class="map">
+		<span id="head" class="snake"></span>
+		<span id="body" class="snake"></span>
+		<span id="tail" class="snake"></span>
+	</div>
+	<button class="start">start</button>
+	<button class="pause">pause</button>
+	<script>
+	var map = document.getElementsByClassName('map')[0];
+	var snake = document.getElementsByClassName('snake');
+	// var snake = [];
+	var start = document.getElementsByClassName('start')[0];
+	var pause = document.getElementsByClassName('pause')[0];
+	var timer;
+	var key = true;
+	var key2 = true;
+	var dir = "up";
+	var num = 300;
+	var foodDiv;
+	// var snake;
+	// for(var le = 0; le < snakeOrigin.length; le ++) {
+	// 	snake[le] = snakeOrigin[le];
+	// }
+	function test(x) {
+		clearInterval(timer);
+		timer = setInterval(function () {
+			// var snake = document.getElementsByClassName('snake');
+			// console.log(snake);
+
+			for(var i = snake.length - 1; i > 0; i --) {
+
+				snake[i].style.left = window.getComputedStyle(snake[i - 1], null).left;
+				snake[i].style.top = window.getComputedStyle(snake[i - 1], null).top;
+			}
+			switch(x){
+				case "up":
+					snake[0].style.top = parseInt(window.getComputedStyle(snake[0], null).top) - 10 + "px";
+					break;
+				case "left":
+					snake[0].style.left = parseInt(window.getComputedStyle(snake[0], null).left) - 10 + "px";
+					break;
+				case "right":
+					snake[0].style.left = parseInt(window.getComputedStyle(snake[0], null).left) + 10 + "px";
+					break;
+				case "down":
+					snake[0].style.top = parseInt(window.getComputedStyle(snake[0], null).top) + 10 + "px";
+					break;
+			}
+			var l = parseInt(snake[0].style.left);
+			var t = parseInt(snake[0].style.top);
+			if (l > 400 || l < 0 || t > 400 || t < 0) {
+				clearInterval(timer);
+				document.write("<div style='width:400px;height:400px;background-color:red;font-size:88px;line-height:400px;margin:auto;'>GAME OVER</div>");
+			}
+			for(var j = 1; j < snake.length; j ++) {
+				if ((snake[0].style.top == snake[j].style.top) && (snake[0].style.left == snake[j].style.left)){
+					clearInterval(timer);
+					document.write("<div style='width:400px;height:400px;background-color:red;font-size:88px;line-height:400px;margin:auto;'>GAME OVER</div>");
+				}
+				if(snake[0].style.top == foodDiv.style.top && (snake[0].style.left == foodDiv.style.left)){
+					foodDiv.style.top = snake[snake.length - 1].style.top;
+					foodDiv.style.left = snake[snake.length - 1].style.left;
+
+					foodDiv.className = "snake";
+				
+					food();
+				}
+			}
+		},num)
+	}
+	start.addEventListener('click', demo, false);
+	start.addEventListener('keydown', demo, false);
+	start.addEventListener('keyup', demo2, false);
+	pause.addEventListener('click', function () {clearInterval(timer)}, false);
+	function demo(e) {
+		var event = e || window.event;
+		// console.log(event);
+		switch(event.which) {
+			case 37:
+				if(key == true) {
+					dir = "left";
+					key = false;
+				}
+				break
+			case 38:
+				if(key == false) {
+					dir = "up";
+					key = true;
+				}
+				break;
+			case 39:
+				if(key == true) {
+					dir = "right";
+					key = false;
+				}
+				break
+			case 40:
+				if(key == false) {
+					dir = "down";
+					key = true;
+				}
+				break
+		}
+		if (event.which == 1) {
+			num =300;
+			if(key2 == true) {
+				test(dir);
+			}
+		}else{
+			num = 50;
+			if(key2 == true) {
+				test(dir);
+			}
+			key2 = false;
+		}
+		
+	}
+	function demo2() {
+		key2 = true;
+		num = 300;
+		test(dir);
+	}
+	function food() {
+		var xx = parseInt(Math.random() * 10) * 40;
+		var yy = parseInt(Math.random() * 10) * 40;
+		foodDiv = document.createElement('div');
+		foodDiv.className = "food";
+		foodDiv.style.left = xx + "px";
+		foodDiv.style.top = yy + "px";
+		map.appendChild(foodDiv);
+	}
+	food();
+	</script>
+</body>
+</html>
